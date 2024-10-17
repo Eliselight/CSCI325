@@ -1,4 +1,8 @@
 #Makefile for employees
+# Author: Elise Lightner
+# File: Makefile
+# Last Modified: 10/17
+# Purpose: A Makefile to compile and link the Employee project, including Employee, Officer, and Supervisor classes.
 
 
 CC = g++
