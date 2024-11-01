@@ -11,10 +11,14 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include "Bypass.h"
+#include "Records.h"
+
 using namespace std;
 
-Login::Login() :
-  generatedPassword(""){}
+Login::Login() : generatedPassword(""){}
+Login::~Login() {}
+
 
 string Login::generatePassword(const Log& log){
   stringstream ss;
@@ -44,7 +48,8 @@ void Login::createAccount(){
  if (verifyPassword(confirmPassword)) {
    log.password = generatedPassword;
    cout << "Password confirmed!" << endl;
-   } else {
+   forcePasswordChange();
+ } else {
    cout << "Passwords do not match. Please try again." << endl;
    createAccount();
  }
@@ -104,3 +109,66 @@ void Login::changeUsername(){
 
 }
 
+bool Login::userLogin() {
+    string usernameAttempt, passwordAttempt;
+
+    cout << "Enter your username: ";
+    cin >> usernameAttempt;
+
+    cout << "Enter your password: ";
+    cin >> passwordAttempt;
+
+    if (usernameAttempt == log.username && passwordAttempt == log.password) {
+        cout << "Login successful!" << endl;
+        return true;
+    } else {
+        cout << "Login failed. Incorrect username or password." << endl;
+        return false;
+    }
+}
+void Login::showMenu() {
+    int choice;
+    Bypass bypass;
+    Records records;
+
+      cout << "1. Login as User" << endl;
+    cout << "2. Bypass Login (Admin)" << endl;
+    cout << "3. Ignore Login (Grading)" << endl;
+    cout << "4. Admin Access" << endl;
+    cout << "5. Exit" << endl;
+    cout << "Enter your choice: ";
+    cin >> choice;
+
+    switch (choice) {
+        case 1:
+            if (userLogin()) {
+                cout << "Logged in as user." << endl;
+                // Show phonebook menu after successful login
+                Phonebook phonebook;
+                phonebook.showMenu();
+            }
+            break;
+
+        case 2:
+            bypass.adminLogin(records);  // Allow admin to login via bypass system
+            break;
+
+        case 3:
+            bypass.ignoreLogin();  // Skip login and go straight to phonebook
+            break;
+
+        case 4:
+            bypass.createAdminUser(records);  // Create a new admin user
+            break;
+
+        case 5:
+            cout << "Exiting..." << endl;
+            exit(0);
+            break;
+
+        default:
+            cout << "Invalid choice. Try again." << endl;
+            showMenu();
+            break;
+    }
+}

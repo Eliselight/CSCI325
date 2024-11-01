@@ -38,6 +38,7 @@
    std::string getUsername() const;
     bool verifyPassword(const std::string& passwordAttempt);
     void changeUsername();
-   
+    bool userLogin();
+    void showMenu();
 };
 #endif
